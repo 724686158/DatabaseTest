@@ -103,5 +103,36 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //替换数据
+        Button replaceData = (Button)findViewById(R.id.replace_data);
+        replaceData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                db.beginTransaction();//开启事务
+                try{
+                    db.delete("Book", null, null);
+                    if(true)
+                    {
+                        //在这里手动抛出一个异常，让事务失效
+                        //throw new NullPointerException();
+                    }
+                    ContentValues values = new ContentValues();
+                    //开始装入第一条数据
+                    values.put("name", "Game of Thrones");
+                    values.put("author", "George Martin");
+                    values.put("pages", 720);
+                    values.put("price", 20.85);
+                    db.insert("Book", null, values);
+                    values.clear();
+                    db.setTransactionSuccessful();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }finally {
+                    db.endTransaction();//结束事务
+                }
+            }
+        });
+
     }
 }
